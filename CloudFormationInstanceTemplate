@@ -1,0 +1,55 @@
+{
+    "AWSTemplateFormatVersion" : "2010-09-09",
+    "Description" : "AWS CloudFormation Sample Template",
+    "Parameters" : {
+      "KeyName": {
+        "Type": "AWS::EC2::KeyPair::KeyName",
+        "Default" : "sample",
+        "MinLength": "1",
+        "MaxLength": "64",
+        "AllowedPattern" : "[-_ a-zA-Z0-9]*",
+        "ConstraintDescription" : "can contain only alphanumeric characters, spaces, dashes and underscores.",
+        "Description" : "Name of an existing EC2 KeyPair to enable SSH access to the instance"
+      },
+       "InstanceType": {
+        "Description": "EC2 instance type",
+        "Type": "String",
+        "Default": "t2.micro"
+      },
+      "ImageID": {
+        "Description": "EC2 instance type",
+        "Type": "String",
+        "Default": "ami-0940b63dee17a1d5f"
+      },
+      "SecurityGroupId" : {
+        "Type" : "String",
+        "Description" : "The SecurityGroupId of an existing EC2 SecurityGroup in your Virtual Private Cloud (VPC)",
+        "Default": "sg-08c56e81c5626b831"
+      },
+      "SubnetID": {
+        "Description": "Subnets where logging EC2 instances can be deployed, must be in same VPC as selected above",
+        "Type": "String",
+        "ConstraintDescription": "must be valid subnet.",
+        "Default": "subnet-06d8dc2a9c438859d"
+      }
+    },
+    "Resources" : {
+      "EC2Instance" : {
+        "Type" : "AWS::EC2::Instance",
+       "Properties" : {
+          "InstanceType" : { "Ref" : "InstanceType" },
+          "SecurityGroupIds" : [{ "Ref" : "SecurityGroupId"}],
+          "KeyName" : { "Ref" : "KeyName" },
+          "ImageId" : { "Ref" : "ImageID" },
+          "InstanceInitiatedShutdownBehavior" : "stop",
+          "SubnetId" : { "Ref": "SubnetID" }
+        }
+      }
+    },
+    "Outputs" : {
+      "InstanceId" : {
+        "Description" : "InstanceId of the newly created EC2 instance",
+        "Value" : { "Ref" : "EC2Instance" }
+      }
+    }
+  }
